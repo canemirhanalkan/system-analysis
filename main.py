@@ -108,10 +108,10 @@ class SystemAnalysis(QMainWindow):
         self.money_detection()
 
 
-    def money_detection(self):
+    def money_detection(self): 
         
         #yolo-model
-        self.model = YOLOv10('best_second.pt')
+        self.model = YOLOv10('moneys.pt')
 
         self.cap = cv2.VideoCapture(0)
  
@@ -149,12 +149,18 @@ class SystemAnalysis(QMainWindow):
             self.numerical_value = int(self.numerical_value[0])
 
         
+        #----------money names
         if self.detected_text == "10_tl":
             self.detected_label.setText(f"Money: {self.numerical_value} TURKISH LIRA")
+        elif self.detected_text == "100_tl":
+            self.detected_label.setText(f"Money: {self.numerical_value} TURKISH LIRA")
+            self.detected_label.setStyleSheet("font-size: 28px;")
         elif self.detected_text == "10_usd":
             self.detected_label.setText(f"Money: {self.numerical_value} USD")
+        elif self.detected_text == "50_euro":
+            self.detected_label.setText(f"Modney: {self.numerical_value} EURO")
 
-        
+
 
 
         self.calculate()
@@ -199,6 +205,20 @@ class SystemAnalysis(QMainWindow):
 
             tl_gbp = round(self.numerical_value / self.gbp, 2)
             self.gbp_value.setText(f"{tl_gbp} £")
+        
+        #100turkishlira
+        elif self.detected_text == "100_tl":
+            self.tl_value.setText(f"{self.numerical_value} ₺")
+            
+            tl_usd = round(self.numerical_value / self.usd, 2)
+            self.usd_value.setText(f"{tl_usd} $")
+
+            tl_euro = round(self.numerical_value / self.euro, 2)
+            self.euro_value.setText(f"{tl_euro} €")
+
+            tl_gbp = round(self.numerical_value / self.gbp, 2)
+            self.gbp_value.setText(f"{tl_gbp} £")
+        
 
         elif self.detected_text == "10_usd":
             #usd-tl
@@ -215,6 +235,22 @@ class SystemAnalysis(QMainWindow):
             #usd-gbp
             usd_gbp = round((self.numerical_value * (self.usd / self.gbp)), 2)
             self.gbp_value.setText(f"{usd_gbp} £")
+
+        elif self.detected_text == "50_euro":
+            #euro-tl
+            euro_tl = round(self.numerical_value * self.euro, 2)
+            self.tl_value.setText(f"{euro_tl} ₺")
+        
+            #euro-usd
+            euro_usd = round(self.numerical_value * (self.euro / self.usd), 2)
+            self.usd_value.setText(f"{euro_usd} $")
+
+            #euro-euro
+            self.euro_value.setText(f"{self.numerical_value} €")
+
+            #euro-gbp
+            euro_gbp = round(self.numerical_value * (self.euro / self.gbp))
+            self.gbp_value.setText(f"{euro_gbp} £")
 
 
         
